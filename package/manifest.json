@@ -1,0 +1,14 @@
+{
+    "format": "transcend.package",
+    "formatVersion": 1,
+    "id": "io.github.your-name.velocity-fade",
+    "name": "Velocity Fade",
+    "version": "1.0.0",
+    "author": "Your Name",
+    "description": "Fades the velocities of the open pattern in or out, from soft to loud or back.",
+    "apiLevel": 12,
+    "provides": [
+        "scripts"
+    ],
+    "entry": "scripts/main.lua"
+}

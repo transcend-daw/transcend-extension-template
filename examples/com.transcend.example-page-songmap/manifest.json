@@ -1,0 +1,15 @@
+{
+    "format": "transcend.package",
+    "formatVersion": 1,
+    "id": "com.transcend.example-page-songmap",
+    "name": "Song Map",
+    "version": "1.0.0",
+    "author": "Transcend",
+    "description": "The whole song on one screen, every track a lane and every clip a bar. Click to move the playhead.",
+    "requiresApp": ">=0.7.0",
+    "apiLevel": 4,
+    "provides": [
+        "scripts"
+    ],
+    "entry": "scripts/main.lua"
+}

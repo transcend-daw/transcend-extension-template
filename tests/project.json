@@ -1,0 +1,22 @@
+{
+    "name": "Velocity Fade tests",
+    "tempo": 120,
+    "activePattern": "p1",
+    "patterns": [
+        {
+            "id": "p1",
+            "name": "Arpeggio",
+            "beats": 4,
+            "pluginId": 1,
+            "notes": [
+                { "note": 60, "velocity": 100, "startStep": 0,  "lengthSteps": 4 },
+                { "note": 64, "velocity": 100, "startStep": 4,  "lengthSteps": 4 },
+                { "note": 67, "velocity": 100, "startStep": 8,  "lengthSteps": 4 },
+                { "note": 72, "velocity": 100, "startStep": 12, "lengthSteps": 4 }
+            ]
+        }
+    ],
+    "clips": [
+        { "track": 0, "patternId": "p1", "startSeconds": 0, "lengthSeconds": 2 }
+    ]
+}

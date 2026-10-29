@@ -1,0 +1,15 @@
+{
+    "format": "transcend.package",
+    "formatVersion": 1,
+    "id": "com.transcend.example-chords",
+    "name": "Chord Helper",
+    "version": "1.0.2",
+    "author": "Transcend",
+    "description": "Names the chord under the playhead, shows the chords of the pattern's key, and writes a progression into the open pattern one click per bar.",
+    "requiresApp": ">=0.7.0",
+    "apiLevel": 4,
+    "provides": [
+        "scripts"
+    ],
+    "entry": "scripts/main.lua"
+}

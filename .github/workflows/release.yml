@@ -1,0 +1,65 @@
+# Builds the .tpkg and attaches it to a GitHub release whenever a version tag is pushed:
+#
+#     git tag v1.0.0
+#     git push origin v1.0.0
+#
+# The tag must be "v" + the version in package/manifest.json. The release gets ONE file,
+# <id>-<version>.tpkg, which is what Transcend's "Install from a link" and the Get Extensions
+# shelf look for. Nothing here signs anything or talks to Transcend's servers.
+
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: The checks the Get Extensions shelf runs
+        shell: pwsh
+        run: ./tools/check_extension.ps1 -Folder package -Community
+
+      - name: The tag matches the version, and the id is yours
+        shell: pwsh
+        run: |
+          $m = Get-Content package/manifest.json -Raw | ConvertFrom-Json
+          if ("v$($m.version)" -ne $env:GITHUB_REF_NAME) {
+            Write-Host "The tag is $($env:GITHUB_REF_NAME) but package/manifest.json says version $($m.version). Tag v$($m.version), or change the version."
+            exit 1
+          }
+          if ($m.id -like "io.github.your-name.*") {
+            Write-Host "package/manifest.json still has the template's id ($($m.id)). Give the extension an id of its own, for example io.github.<your GitHub name>.<extension>."
+            exit 1
+          }
+          "PKG_ID=$($m.id)"        >> $env:GITHUB_ENV
+          "PKG_NAME=$($m.name)"    >> $env:GITHUB_ENV
+          "PKG_VERSION=$($m.version)" >> $env:GITHUB_ENV
+
+      - name: Every Lua file compiles
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lua5.4
+          find package tests -name '*.lua' -print0 | xargs -0 -n1 luac5.4 -p
+
+      - name: Build the .tpkg
+        shell: pwsh
+        run: ./tools/check_extension.ps1 -Folder package -Community -Pack "$env:PKG_ID-$env:PKG_VERSION.tpkg"
+
+      - name: Attach it to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          file="$PKG_ID-$PKG_VERSION.tpkg"
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$file" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$file" --title "$PKG_NAME $PKG_VERSION" \
+              --notes "Install it in Transcend: Browser > Extensions > Get Extensions > Install from a link, then paste $GITHUB_REPOSITORY."
+          fi

@@ -1,0 +1,13 @@
+{
+    "format": "transcend.package",
+    "formatVersion": 1,
+    "id": "com.transcend.example-layout-stage",
+    "name": "Stage",
+    "version": "1.0.0",
+    "author": "Transcend",
+    "description": "A rearranged window: browser on the left, menus pulled into the transport bar, flat workspace buttons, piano roll docked under the arrangement.",
+    "requiresApp": ">=0.7.0",
+    "provides": [
+        "layout"
+    ]
+}

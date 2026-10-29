@@ -1,0 +1,25 @@
+# On every push and pull request: the checks the Get Extensions shelf runs, and every Lua file
+# compiles. (The tests themselves need Transcend, so they run on your computer: pwsh tools/test.ps1.)
+
+name: Check
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: The checks the Get Extensions shelf runs
+        shell: pwsh
+        run: ./tools/check_extension.ps1 -Folder package -Community
+
+      - name: Every Lua file compiles
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lua5.4
+          find package tests -name '*.lua' -print0 | xargs -0 -n1 luac5.4 -p
